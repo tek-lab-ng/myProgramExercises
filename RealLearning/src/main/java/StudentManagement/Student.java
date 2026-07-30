@@ -1,5 +1,7 @@
 package StudentManagement;
 
+import java.util.List;
+
 public class Student {
     private int id;
     private String name;
@@ -91,7 +93,25 @@ class Main {
         oldest.displayStudent();
 
 
+        Solution<Student> student = new Solution<Student>(new Student(101, "Gabriel", 20, "Chemistry"));
 
+
+
+
+
+
+
+
+    }
+
+    private static double sum(List<? extends Number> list)
+    {
+        double sum = 0.0;
+        for (Number i : list) {
+            sum += i.doubleValue();
+        }
+
+        return sum;
     }
 }
 
@@ -106,5 +126,18 @@ class StudentUtility {
         Student student = s1.getAge() < s2.getAge() ? s1 : s2;
         return student;
     }
+
+}
+
+class Solution<Student> {
+    Student data;
+
+    public Solution(Student s){
+        this.data = s;
+    }
+    public Student getData(){
+        return data;
+    }
+
 
 }

@@ -1,14 +1,19 @@
 package StudentManagement;
 
-public abstract class Person {
+import java.util.Scanner;
+
+abstract class Person {
     private int id;
     private String name;
     private int age;
+    private String email;
 
-    public Person(int id, String name, int age) {
-        this.id = id;
-        this.name = name;
-        this.age = age;
+    public Person(int id, String name, int age, String email) {
+            this.id = id;
+            this.name = name;
+            this.age = age;
+            this.email = email;
+
     }
 
     public int getId() {
@@ -40,12 +45,31 @@ public abstract class Person {
 
 }
 
-class Students extends Person {
+abstract class  LibraryMember  extends Person{
+
+    private String libraryCardNumber;
+
+    public LibraryMember(int id, String name, int age, String libraryCardNumber, String email) {
+        super(id, name, age, email);
+        this.libraryCardNumber = libraryCardNumber;
+    }
+
+    public String getLibraryCardNumber() {
+        return libraryCardNumber;
+    }
+
+    public void setLibraryCardNumber(String libraryCardNumber) {
+        this.libraryCardNumber = libraryCardNumber;
+    }
+}
+
+class Students extends LibraryMember {
 
     private String course;
+    private String grade;
 
-    Students (int id, String name, int age, String course){
-        super(id, name, age);
+    Students (int id, String name, int age, String course, String libraryCardNumber, String email){
+        super(id, name, age, libraryCardNumber, email );
         this.course = course;
     }
 
@@ -57,21 +81,29 @@ class Students extends Person {
         this.course = course;
     }
 
+    public void setGrade(String grade){
+        this.grade = grade;
+    }
+    public String getGrade(){return grade;}
+
     @Override
     public void introduce() {
-        System.out.println("Hi, I'm " + super.getName()
+        System.out.println("Hi, I'm " + getName()
                 + " and I study " + getCourse());
     }
 
 }
 
-class Lecturer extends Person {
+class Lecturer extends LibraryMember {
 
     private String department;
+    private int salary;
 
-    public Lecturer(int id, String name, int age, String department) {
-        super(id, name, age);
+    public Lecturer(int id, String name, int age, String department, String libraryCardNumber, String email, int salary) {
+        super(id, name, age, libraryCardNumber, email);
         this.department = department;
+        this.salary = salary;
+
     }
 
     public String getDepartment() {
@@ -82,22 +114,71 @@ class Lecturer extends Person {
         this.department = department;
     }
 
+    public void setSalary(int salary) {
+        this.salary = salary;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void assignGrade(Students s){
+        Scanner in = new Scanner(System.in);
+        System.out.print("Kindly enter the grade for the student selected: ");
+        s.setGrade(in.next());
+        System.out.println("The name of student with grade:  " + s.getName() +"  " + s.getGrade());
+    }
+
     @Override
     public void introduce() {
-        System.out.println("Hi, I'm " + super.getName()
+        System.out.println("Hi, I'm " + getName()
                 + " and I teach " + getDepartment());
     }
 }
 
 class Security extends Person {
 
-    public Security(int id, String name, int age) {
-        super(id, name, age);
+    public Security(int id, String name, int age, String email) {
+        super(id, name, age, email);
     }
 
     @Override
     public void introduce() {
         System.out.println("Hi, I'm " + getName()
                 + " and I work at Gate 2.");
+    }
+}
+
+class Janitor extends Person {
+
+    public Janitor(int id, String name, int age, String email) {
+        super(id, name, age, email);
+    }
+
+    @Override
+    public void introduce() {
+
+    }
+}
+
+
+
+class MyApp {
+    public static void main(String[] args) {
+        Students s1 = new Students(1, "Gabriel", 20, "Computer Science", "010", "gabrieljames85@gmail.com" );
+        Students s2 = new Students(2, "Jayden", 17, "Chemistry", "011", "jayden@gmail.com" );
+
+        Lecturer l1 = new Lecturer(1, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
+        Lecturer l2 = new Lecturer(2, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
+
+        Security sec1 = new Security(3, "Mike", 28, "Mike@gmail.com");
+        Security sec2 = new Security(4, "Ben", 29, "Ben@gmail.com");
+
+
+        Janitor jan1 = new Janitor(5, "Kemi", 30, "Kemi@gmail.com");
+        Janitor jan2 = new Janitor(6, "Aunty", 28, "Aunty@gmail.com");
+
+
+
     }
 }

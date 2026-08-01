@@ -26,7 +26,6 @@ public class Revised {
         teacher.add("Fred");
         teacher.add("oemi");
         teacher.add("Gabriel");
-
         System.out.println(teacher);
         Collections.sort(teacher);
 
@@ -36,12 +35,60 @@ public class Revised {
        boolean value = carrot.matches("\\D+");
        System.out.println(value);
 
+       List capetown = new ArrayList<>();
+        capetown.add("Janet");
+        capetown.add("Gabriel");
+        capetown.add("Janet");
+        capetown.add("Sandra");
+
+        Collections.sort(capetown);
+
+        System.out.println(capetown);
+
+
 
        //new Revised().checkings(caps);
+
+//        Person p1 = new Person(10, "Gabriel", 20);
+//        Person p2 = new Person(10, "Fidelis", 25);
+//
+//
+//        Map<Integer, Person> Class = new HashMap<>();
+//        Class.put(1, p1);
+//        Class.put(2, p2);
+//
+//        //System.out.println(Class.entrySet());
+//
+//        Set<Map.Entry<Integer, Person >> EntrySet = Class.entrySet();
+//
+//        for(Map.Entry<Integer, Person> outings : EntrySet) {
+//            System.out.println(outings.getKey() );
+//            System.out.println(outings.getValue().getName());
+//        }
 
     }
 
     public void checkings(String ...n){
         System.out.println(Arrays.toString(n));
+    }
+
+    public String calculate(int k, int A, String ops){
+        try {
+            if (ops.equals("**")) {
+                throw new illegalOperationException("you have entered a wrong operation for maths ");
+            }
+            return null;
+        } catch (illegalOperationException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
+
+}
+
+class illegalOperationException extends Exception {
+    illegalOperationException(String e){
+        super(e);
     }
 }

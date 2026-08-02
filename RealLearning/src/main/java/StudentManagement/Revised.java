@@ -66,6 +66,15 @@ public class Revised {
 //            System.out.println(outings.getValue().getName());
 //        }
 
+        String verify = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+        String email = "gabrieljames85gmail";
+
+        if((email.matches(verify))){
+            System.out.println("Very correct information");
+        } else {
+            System.out.println("This is false");
+        }
+
     }
 
     public void checkings(String ...n){

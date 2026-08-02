@@ -1,8 +1,6 @@
 package StudentManagement;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 //The University Management Structure
 abstract class Person {
@@ -11,14 +9,12 @@ abstract class Person {
     private int age;
     private String email;
 
+
     public Person(int id, String name, int age, String email) {
+
             this.id = id;
             this.name = name;
-            if (age >= 18){
-                this.age = age;
-            } else {
-                throw new InvalidAgeException("This user " + name+ " is not valid to be a student or staff, need to be 18 and above in age");
-            }
+            this.age = age;
             this.email = email;
 
     }
@@ -45,6 +41,14 @@ abstract class Person {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
+    }
+
+    public String getEmail(){
+        return email;
     }
 
     public abstract void introduce();
@@ -77,9 +81,11 @@ class Students extends LibraryMember {
     private String course;
     private String grade;
 
+    List<Integer> checkid = new ArrayList<>();
+
     Students (int id, String name, int age, String course, String libraryCardNumber, String email){
-        super(id, name, age, libraryCardNumber, email );
-        this.course = course;
+            super(id, name, age, libraryCardNumber, email);
+            this.course = course;
     }
 
     public String getCourse() {
@@ -196,41 +202,36 @@ class Janitor extends Person {
 
 class MyApp {
 
-    static List<Person> people;
-
     public static void main(String[] args) {
 
-        people = new ArrayList<>();
+        University people = new University();
 
         Students s1 = new Students(1, "Gabriel", 20, "Computer Science", "010", "gabrieljames85@gmail.com" );
-        try{
-            Students s2 = new Students(2, "Jayden", 17, "Chemistry", "011", "jayden@gmail.com" );
-            people.add(s2);
-        }catch (InvalidAgeException e){
-            System.out.println(e.getMessage());
-        }
+
+        Students s2 = new Students(2, "Jayden", 20, "Chemistry", "011", "jayden@gmail.com" );
 
         Lecturer l1 = new Lecturer(1, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
-        Lecturer l2 = new Lecturer(2, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
+        Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
 
-        Security sec1 = new Security(3, "Mike", 28, "Mike@gmail.com", 1);
-        Security sec2 = new Security(4, "Ben", 29, "Ben@gmail.com", 2);
+        Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1);
+        Security sec2 = new Security(6, "Ben", 29, "Ben@gmail.com", 2);
 
 
-        Janitor jan1 = new Janitor(5, "Kemi", 30, "Kemi@gmail.com", "First Floor");
-        Janitor jan2 = new Janitor(6, "Aunty", 28, "Aunty@gmail.com", "Second Floor");
+        Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor");
+        Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor");
 
-        people.add(s1);
-        people.add(l1);
-        people.add(l2);
-        people.add(sec1);
-        people.add(sec2);
-        people.add(jan1);
-        people.add(jan2);
+        people.addPerson(s1);
+        people.addPerson(s2);
+        people.addPerson(l1);
+        people.addPerson(l2);
+        people.addPerson(sec1);
+        people.addPerson(sec2);
+        people.addPerson(jan1);
+        people.addPerson(jan2);
 
-        for (Person person : people){
-            person.introduce();
-        }
+        people.displayEveryone();
+
+
 
     }
 
@@ -242,3 +243,62 @@ class InvalidAgeException extends RuntimeException{
         super(e);
     }
 }
+
+//Creating the DuplicatePersonIdException Class to handle id duplicate
+class DuplicatePersonIdException extends RuntimeException {
+    public DuplicatePersonIdException(String e){
+        super(e);
+    }
+}
+
+class InvalidEmailException extends RuntimeException {
+    public InvalidEmailException(String e){
+        super(e);
+    }
+}
+
+class University {
+
+    private List<Person> people = new ArrayList<>();
+
+    public void addPerson(Person person) {
+
+        String verify = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+        try{
+
+            for (Person p : people) {
+                if (p.getId() == person.getId()) {
+                    throw new DuplicatePersonIdException("The id enter for this person " + person.getName() + " already exist");
+                } else if(person.getAge() < 18){
+                    throw new InvalidAgeException("This user " + person.getName() + " is not valid to be a student or staff, need to be 18 and above in age");
+                } else {
+                    if(!(person.getEmail().matches(verify))) {
+
+                    throw new InvalidEmailException("The email entered by " + p.getName() + " is not valid" );
+
+                    }
+                }
+            }
+
+            people.add(person);
+        }catch (InvalidAgeException | DuplicatePersonIdException | InvalidEmailException e ){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public Person findById(int id) {
+        Person p = null;
+        for (Person person : people){
+            if(person.getId() == id)
+                p = person;
+        }
+        return p;
+    }
+
+    public void displayEveryone() {
+        for (Person person : people){
+            person.introduce();
+        }
+    }
+}
+

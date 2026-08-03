@@ -81,8 +81,6 @@ class Students extends LibraryMember {
     private String course;
     private String grade;
 
-    List<Integer> checkid = new ArrayList<>();
-
     Students (int id, String name, int age, String course, String libraryCardNumber, String email){
             super(id, name, age, libraryCardNumber, email);
             this.course = course;
@@ -220,14 +218,18 @@ class MyApp {
         Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor");
         Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor");
 
-        people.addPerson(s1);
-        people.addPerson(s2);
-        people.addPerson(l1);
-        people.addPerson(l2);
-        people.addPerson(sec1);
-        people.addPerson(sec2);
-        people.addPerson(jan1);
-        people.addPerson(jan2);
+       try {
+           people.addPerson(s1);
+           people.addPerson(s2);
+           people.addPerson(l1);
+           people.addPerson(l2);
+           people.addPerson(sec1);
+           people.addPerson(sec2);
+           people.addPerson(jan1);
+           people.addPerson(jan2);
+       } catch (InvalidAgeException | InvalidEmailException | DuplicatePersonIdException e){
+           System.out.println(e.getMessage());
+       }
 
         people.displayEveryone();
 
@@ -264,35 +266,34 @@ class University {
     public void addPerson(Person person) {
 
         String verify = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-        try{
 
-            for (Person p : people) {
-                if (p.getId() == person.getId()) {
-                    throw new DuplicatePersonIdException("The id enter for this person " + person.getName() + " already exist");
-                } else if(person.getAge() < 18){
-                    throw new InvalidAgeException("This user " + person.getName() + " is not valid to be a student or staff, need to be 18 and above in age");
-                } else {
-                    if(!(person.getEmail().matches(verify))) {
+        if (person.getAge() < 18) {
+            throw new InvalidAgeException(person.getName() + " must be at least 18 years old.");
+        }
 
-                    throw new InvalidEmailException("The email entered by " + p.getName() + " is not valid" );
+        if (!person.getEmail().matches(verify)) {
+            throw new InvalidEmailException(
+                    "Invalid email for " + person.getName()
+            );
+        }
 
-                    }
-                }
+        for (Person p : people) {
+            if (p.getId() == person.getId()) {
+                throw new DuplicatePersonIdException("The id enter for this person " + person.getName() + " already exist");
             }
 
-            people.add(person);
-        }catch (InvalidAgeException | DuplicatePersonIdException | InvalidEmailException e ){
-            System.out.println(e.getMessage());
         }
+
+        people.add(person);
+
     }
 
     public Person findById(int id) {
-        Person p = null;
         for (Person person : people){
             if(person.getId() == id)
-                p = person;
+                return person;
         }
-        return p;
+        return null;
     }
 
     public void displayEveryone() {

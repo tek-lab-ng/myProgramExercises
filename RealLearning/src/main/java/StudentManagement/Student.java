@@ -1,6 +1,6 @@
 package StudentManagement;
 
-import java.util.List;
+import java.util.*;
 
 public class Student {
     private int id;
@@ -96,10 +96,19 @@ class Main {
         Solution<Student> student = new Solution<Student>(new Student(101, "Gabriel", 20, "Chemistry"));
 
 
+        Map<Integer, String> card = new HashMap<>();
+        card.put(1, "Gabriel");
+        card.put(2, "Janet");
+
+        Set<String> setting = new HashSet<>();
+        setting.add("kemi");
+        setting.add("siemens");
 
 
-
-
+        Iterator<String> k = setting.iterator();
+        while(k.hasNext()){
+            System.out.println(k.next());
+        }
 
 
     }
@@ -141,3 +150,20 @@ class Solution<Student> {
 
 
 }
+
+class Bond<T extends B> {
+
+}
+
+class B {
+
+}
+
+class A extends B {
+
+}
+
+class C extends B {
+
+}
+

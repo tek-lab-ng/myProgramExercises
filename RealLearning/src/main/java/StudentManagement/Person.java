@@ -1,6 +1,7 @@
 package StudentManagement;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 //The University Management Structure
 abstract class Person {
@@ -204,11 +205,11 @@ class MyApp {
 
         University people = new University();
 
-        Students s1 = new Students(1, "Gabriel", 20, "Computer Science", "010", "gabrieljames85@gmail.com" );
+        Students s1 = new Students(1, "Gabriel", 25, "Computer Science", "010", "gabrieljames85@gmail.com" );
 
-        Students s2 = new Students(2, "Jayden", 20, "Chemistry", "011", "jayden@gmail.com" );
+        Students s2 = new Students(2, "Jayden", 21, "Chemistry", "011", "jayden@gmail.com" );
 
-        Lecturer l1 = new Lecturer(1, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
+        Lecturer l1 = new Lecturer(3, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
         Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
 
         Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1);
@@ -231,8 +232,34 @@ class MyApp {
            System.out.println(e.getMessage());
        }
 
-        people.displayEveryone();
+       //people.displayEveryone();
+        //challenge 1
+        people.getPerson().forEach(Person::introduce);
+        people.getPerson().stream().forEach(Person::introduce);
 
+        //challenge 2
+       List<Person> personAdult = people.getPerson().stream().filter(n -> n.getAge() > 18).toList();
+       //challenge 3
+
+        List<Lecturer> lecturers = people.getPerson().stream().filter(person -> person instanceof Lecturer).map(person-> (Lecturer) person).toList();
+       lecturers.forEach(lect -> System.out.println(lect.getDepartment()));
+ //       people.getPerson().stream().filter(person -> person.)
+        //Challenge 4
+        List<String> output = people.getPerson().stream().map(Person::getEmail).toList();
+
+
+       Predicate<Person> predicate = (Person p) -> p.getName().equals("Gabriel");
+
+       List<Person> results = people.findPerson(predicate);
+
+       //results.forEach(n -> System.out.println(n.getName()));
+
+
+       List<Person> everyOne = people.getPerson();
+
+       Collections.sort(everyOne, (n1, n2) -> Integer.compare(n1.getAge(), n2.getAge()));
+
+       everyOne.forEach(n-> System.out.println(n.getName()));
 
 
     }
@@ -301,5 +328,23 @@ class University {
             person.introduce();
         }
     }
+
+    public List<Person> getPerson(){
+        return people;
+    }
+
+
+    public List<Person> findPerson(Predicate<Person> predicate){
+        List<Person> pops = new ArrayList<>();
+        for(Person person : people){
+            if(predicate.test(person)){
+                pops.add(person);
+            }
+        }
+        return pops;
+    }
+
+
+
 }
 

@@ -1,10 +1,10 @@
-package StudentManagement;
+package Universities;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 //The University Management Structure
-abstract class Person {
+public abstract class Person {
     private int id;
     private String name;
     private int age;
@@ -77,12 +77,12 @@ abstract class  LibraryMember  extends Person{
 }
 
 //This is the Student class
-class Students extends LibraryMember {
+class Student extends LibraryMember {
 
     private String course;
     private String grade;
 
-    Students (int id, String name, int age, String course, String libraryCardNumber, String email){
+    Student(int id, String name, int age, String course, String libraryCardNumber, String email){
             super(id, name, age, libraryCardNumber, email);
             this.course = course;
     }
@@ -137,7 +137,7 @@ class Lecturer extends LibraryMember {
         return salary;
     }
 
-    public void assignGrade(Students s){
+    public void assignGrade(Student s){
         Scanner in = new Scanner(System.in);
         System.out.print("Kindly enter the grade for the student selected: ");
         s.setGrade(in.next());
@@ -205,9 +205,9 @@ class MyApp {
 
         University people = new University();
 
-        Students s1 = new Students(1, "Gabriel", 25, "Computer Science", "010", "gabrieljames85@gmail.com" );
+        Student s1 = new Student(1, "Gabriel", 25, "Computer Science", "010", "gabrieljames85@gmail.com" );
 
-        Students s2 = new Students(2, "Jayden", 21, "Chemistry", "011", "jayden@gmail.com" );
+        Student s2 = new Student(2, "Jayden", 21, "Chemistry", "011", "jayden@gmail.com" );
 
         Lecturer l1 = new Lecturer(3, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
         Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
@@ -261,6 +261,10 @@ class MyApp {
 
        everyOne.forEach(n-> System.out.println(n.getName()));
 
+//       int numberOfPerson = people.getPerson().size();
+//       System.out.println(numberOfPerson);
+
+
 
     }
 
@@ -285,66 +289,3 @@ class InvalidEmailException extends RuntimeException {
         super(e);
     }
 }
-
-class University {
-
-    private List<Person> people = new ArrayList<>();
-
-    public void addPerson(Person person) {
-
-        String verify = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
-
-        if (person.getAge() < 18) {
-            throw new InvalidAgeException(person.getName() + " must be at least 18 years old.");
-        }
-
-        if (!person.getEmail().matches(verify)) {
-            throw new InvalidEmailException(
-                    "Invalid email for " + person.getName()
-            );
-        }
-
-        for (Person p : people) {
-            if (p.getId() == person.getId()) {
-                throw new DuplicatePersonIdException("The id enter for this person " + person.getName() + " already exist");
-            }
-
-        }
-
-        people.add(person);
-
-    }
-
-    public Person findById(int id) {
-        for (Person person : people){
-            if(person.getId() == id)
-                return person;
-        }
-        return null;
-    }
-
-    public void displayEveryone() {
-        for (Person person : people){
-            person.introduce();
-        }
-    }
-
-    public List<Person> getPerson(){
-        return people;
-    }
-
-
-    public List<Person> findPerson(Predicate<Person> predicate){
-        List<Person> pops = new ArrayList<>();
-        for(Person person : people){
-            if(predicate.test(person)){
-                pops.add(person);
-            }
-        }
-        return pops;
-    }
-
-
-
-}
-

@@ -125,6 +125,12 @@ public class Revised {
         System.out.println(persons.stream().filter(n -> n.getAge() > 25)
                 .collect(Collectors.groupingBy(Person::getName, Collectors.collectingAndThen(Collectors.counting(), f -> f.toString()))));
 
+        System.out.println(persons.stream().filter(n -> n.getAge() > 25)
+                .collect(Collectors.groupingBy(Person::getName, Collectors.toCollection(ArrayList::new))));
+
+        System.out.println(persons.stream().filter(n -> n.getAge() > 25)
+                .collect(Collectors.groupingBy(Person::getName, Collectors.mapping(Person::getAge, Collectors.toList()))));
+
 
 
 

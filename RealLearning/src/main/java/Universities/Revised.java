@@ -1,10 +1,16 @@
 package Universities;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class Revised {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
 
 //        ArrayList<String> student = new ArrayList<String>();
@@ -131,6 +137,52 @@ public class Revised {
         System.out.println(persons.stream().filter(n -> n.getAge() > 25)
                 .collect(Collectors.groupingBy(Person::getName, Collectors.mapping(Person::getAge, Collectors.toList()))));
 
+        //Checking time
+        LocalDateTime current = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("dd:mm:yy hh:mm:ss");
+
+        System.out.println("The time and date is: " + current.format(format));
+
+        ZonedDateTime myTime = ZonedDateTime.now();
+        ZoneId ghana = ZoneId.of("Asia/Tokyo");
+
+        ZonedDateTime localghanaTime = myTime.withZoneSameInstant(ghana);
+
+        System.out.println("The current time in ghana is: " + localghanaTime);
+
+
+        //Multithreadingr
+
+        //Thread with the Thread class
+        BookStore bk1 = new BookStore("Alvin and Shimpmonk", 100);
+        BookStore bk2 = new BookStore("Micky mouse", 85);
+        BookStore bk3 = new BookStore("Harry Potter", 150);
+        BookStore bk4 = new BookStore("Spoon and plate", 250);
+
+        bk1.start();
+        bk2.start();
+        bk3.start();
+        bk4.start();
+
+        System.out.println(" ");
+        //Thread with Runnable implemented class
+        Thread seller1 = new Thread(new BookSellers("Femi", 1));
+        Thread seller2 = new Thread(new BookSellers("David", 2));
+        Thread seller3 = new Thread(new BookSellers("Joseph", 3));
+        Thread seller4 = new Thread(new BookSellers("Chioma", 1));
+
+        seller1.start();
+        seller2.start();
+        Thread.sleep(1000);
+        seller3.start();
+        seller4.start();
+
+        Executor executor = Executors.newFixedThreadPool(2);
+        executor.execute(() -> {System.out.println(2);});
+
+
+
+
 
 
 
@@ -158,5 +210,68 @@ public class Revised {
 class illegalOperationException extends Exception {
     illegalOperationException(String e){
         super(e);
+    }
+}
+
+class BookStore extends Thread{
+
+    String name;
+    int pages;
+
+    BookStore(String name, int pages){
+        this.name = name;
+        this.pages = pages;
+    }
+
+    public String getBookName() {
+        return name;
+    }
+
+    public void setBookName(String name) {
+        this.name = name;
+    }
+
+    public int getPages() {
+        return pages;
+    }
+
+    public void setPages(int pages) {
+        this.pages = pages;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("The book currently running is: " + getBookName() + " " + Thread.currentThread().getName());
+    }
+}
+
+
+class BookSellers implements Runnable{
+    String name;
+    int number;
+    BookSellers(String name, int number){
+        this.name = name;
+        this.number = number;
+    }
+
+    public String getSellerName() {
+        return name;
+    }
+
+    public void setSellerName(String name) {
+        this.name = name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    @Override
+    public void run() {
+        System.out.println("This class implements runnable with sellers: " + getSellerName() + " " + Thread.currentThread().getName());
     }
 }

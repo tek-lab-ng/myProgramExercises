@@ -5,6 +5,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
@@ -92,12 +93,12 @@ public class Revised {
         Lecturer l1 = new Lecturer(3, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
         Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
 
-        Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1);
-        Security sec2 = new Security(6, "Ben", 29, "Ben@gmail.com", 2);
+        Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1, 200000);
+        Security sec2 = new Security(6, "Ben", 29, "Ben@gmail.com", 2, 20000);
 
 
-        Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor");
-        Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor");
+        Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor", 150000);
+        Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor", 150000);
 
         people.addPerson(s1);
         people.addPerson(s2);
@@ -169,7 +170,7 @@ public class Revised {
         Thread seller1 = new Thread(new BookSellers("Femi", 1));
         Thread seller2 = new Thread(new BookSellers("David", 2));
         Thread seller3 = new Thread(new BookSellers("Joseph", 3));
-        Thread seller4 = new Thread(new BookSellers("Chioma", 1));
+        Thread seller4 = new Thread(new BookSellers("Chioma", 4));
 
         seller1.start();
         seller2.start();
@@ -177,12 +178,40 @@ public class Revised {
         seller3.start();
         seller4.start();
 
-        Executor executor = Executors.newFixedThreadPool(2);
+        //used to temporarily create threads that be used to run some programs
+        ExecutorService executor = Executors.newFixedThreadPool(2);
         executor.execute(() -> {System.out.println(2);});
+        executor.shutdown();
+
+        //Synchronization is used to control the execution of multiple processes or threads so that shared resources are accessed in a proper and orderly manner.
+
+        BookSellers k = new BookSellers("Kemi", 5);
+        Thread checkSync = new Thread(() -> {
+                    for(int i = 0; i < 1000; i++)
+                        k.getSellerName();
+
+        });
+
+        Thread checkeys = new Thread(() -> {
+            for(int i = 0; i < 1000; i++)
+                k.getSellerName();
+
+        });
+
+        checkSync.start();
+        checkeys.start();
+
+        try{
+            checkeys.join();
+            checkeys.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
+        System.out.println("The output of the counter is: " + k.counter());
 
-
+        
 
 
 
@@ -249,12 +278,15 @@ class BookStore extends Thread{
 class BookSellers implements Runnable{
     String name;
     int number;
+    int c;
     BookSellers(String name, int number){
         this.name = name;
         this.number = number;
+
     }
 
     public String getSellerName() {
+        c++;
         return name;
     }
 
@@ -268,6 +300,10 @@ class BookSellers implements Runnable{
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public synchronized int counter(){
+        return c;
     }
 
     @Override

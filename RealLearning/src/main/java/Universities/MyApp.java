@@ -1,10 +1,7 @@
 package Universities;
 
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -18,15 +15,15 @@ public class MyApp {
 
         Student s2 = new Student(2, "Jayden", 21, "Chemistry", "011", "jayden@gmail.com" );
 
-        Lecturer l1 = new Lecturer(3, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 10000);
-        Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 20000);
+        Lecturer l1 = new Lecturer(3, "Fred", 40, "Computer Science", "012", "fred@gmail.com", 700000);
+        Lecturer l2 = new Lecturer(4, "Lucy", 45, "Physics", "012", "Lucy@gmail.com", 700000);
 
-        Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1);
-        Security sec2 = new Security(6, "Ben", 29, "Ben@gmail.com", 2);
+        Security sec1 = new Security(5, "Mike", 28, "Mike@gmail.com", 1, 200000);
+        Security sec2 = new Security(6, "Ben", 29, "Ben@gmail.com", 2, 200000);
 
 
-        Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor");
-        Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor");
+        Janitor jan1 = new Janitor(7, "Kemi", 30, "Kemi@gmail.com", "First Floor", 15000);
+        Janitor jan2 = new Janitor(8, "Aunty", 28, "Aunty@gmail.com", "Second Floor", 150000);
 
         try {
             people.addPerson(s1);
@@ -79,6 +76,21 @@ public class MyApp {
 
         System.out.println("This are the lecturers in the university " + people.displayLecturers().stream().map(n->n.getName()).toList());
 
+        //Implemented the Interface Payable and filtered the class that implemented it
+        Payable payable = l1;
+        System.out.println("The salary of this lecture l1 is: " + payable.calculatePay());
+
+
+        List<Payable> payables = new ArrayList<>(people.getPerson().stream().filter(persons -> persons instanceof Payable).map(persons -> (Payable) persons).toList());
+//        payables.addAll(people.getPerson().stream().filter(persons -> persons instanceof Janitor).map(persons-> (Janitor) persons).toList());
+//        payables.addAll(people.getPerson().stream().filter(persons -> persons instanceof Security).map(persons-> (Security) persons).toList());
+
+        Map<String, Double> allPay = payables.stream().collect(Collectors.groupingBy(n-> n.getClass().getSimpleName(), Collectors.summingDouble(Payable::calculatePay)));
+
+        //Printed out the class that implemented payable and the total money in the class calculated...
+        allPay.forEach((ClassName, TotalValue) -> {
+            System.out.println("My Class: " + ClassName + "->" + " TotalValue  " + TotalValue);
+        });
 
 
     }

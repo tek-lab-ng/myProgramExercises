@@ -3,7 +3,7 @@ package Universities;
 import java.util.Scanner;
 
 //This is the Lecturer class
-public class Lecturer extends LibraryMember {
+public class Lecturer extends LibraryMember implements Payable{
 
     private String department;
     private int salary;
@@ -27,8 +27,9 @@ public class Lecturer extends LibraryMember {
         this.salary = salary;
     }
 
-    public int getSalary() {
-        return salary;
+    public double getSalary() {
+
+        return calculatePay();
     }
 
     public void assignGrade(Student s){
@@ -42,5 +43,16 @@ public class Lecturer extends LibraryMember {
     public void introduce() {
         System.out.println("Hi, I'm " + getName()
                 + " and I teach " + getDepartment());
+    }
+
+    @Override
+    public double calculatePay() {
+        double allowancePercentage = 0.1;
+        double afterAllowance;
+        if(salary > 0) {
+          afterAllowance  = (salary * allowancePercentage) + salary;
+            return afterAllowance;
+        }
+        return 0;
     }
 }

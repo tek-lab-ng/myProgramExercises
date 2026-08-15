@@ -31,7 +31,7 @@ public class Revised {
 //        List<String> teacher = new ArrayList<String>();
 //        teacher.add("Kemi");
 //        teacher.add("Fred");
-//        teacher.add("oemi");
+//        teacher.add("kemi");
 //        teacher.add("Gabriel");
 //        System.out.println(teacher);
 //        Collections.sort(teacher);
@@ -211,6 +211,9 @@ public class Revised {
 
         System.out.println("The output of the counter is: " + k.counter());
 
+
+
+
         
 
 
@@ -275,7 +278,7 @@ class BookStore extends Thread{
 }
 
 
-class BookSellers implements Runnable{
+class BookSellers extends Thread{
     String name;
     int number;
     int c;
@@ -311,3 +314,4 @@ class BookSellers implements Runnable{
         System.out.println("This class implements runnable with sellers: " + getSellerName() + " " + Thread.currentThread().getName());
     }
 }
+

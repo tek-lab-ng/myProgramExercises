@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class University {
-
-        private List<Person> people = new ArrayList<>();
+        private final List<Person> people = new ArrayList<>();
 
         public void addPerson(Person person) {
             validateAge(person);

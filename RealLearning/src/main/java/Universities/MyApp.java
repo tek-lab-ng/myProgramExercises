@@ -1,13 +1,17 @@
 package Universities;
 
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class MyApp {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
 
         University people = new University();
 
@@ -91,6 +95,34 @@ public class MyApp {
         allPay.forEach((ClassName, TotalValue) -> {
             System.out.println("My Class: " + ClassName + "->" + " TotalValue  " + TotalValue);
         });
+
+        try{
+            Path filepath = Paths.get("C:\\Users\\Gabriel.Osaji\\Documents\\Public Class A\\RealLearning\\src\\main\\java\\Universities");
+            System.out.println("  Challenge 1");
+            //challenge 1
+            Files.walk(filepath).forEach(System.out::println);
+
+            System.out.println("  Challenge 2");
+
+            //challenge 2
+            Files.walk(filepath).filter(Files::isRegularFile).forEach(path -> System.out.println("The paths that are regularFiles are" + path));
+
+            System.out.println("  Challenge 3");
+            //challenge 3
+            System.out.println("The list files ending with .txt");
+            Files.walk(filepath).filter(n->n.toString().endsWith(".txt")).forEach(System.out::println);
+
+            //challenge 4
+            System.out.println("The list files ending with .txt only in the Parent folder not child folder");
+            Files.walk(filepath, 1).filter(n->n.toString().endsWith(".txt")).forEach(System.out::println);
+
+            //challenge 5 and 6
+            List<String> filenames = Files.walk(filepath).filter(Files::isRegularFile).map(path -> path.getFileName().toString()).toList();
+//            System.out.println(filenames);
+
+        }catch (IOException e){
+            throw new RuntimeException();
+        }
 
 
     }

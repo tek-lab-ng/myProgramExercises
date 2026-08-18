@@ -1,0 +1,3 @@
+//This is a text file for the purpose of testing out file input and output operation!!
+
+My name is Gabriel Osaji, and I am testing out how to use the I/O operation ...

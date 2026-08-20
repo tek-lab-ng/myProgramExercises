@@ -1,1 +1,4 @@
-This file is expected to contain all old students
+
+1,Gabriel,25,Computer Science,010,gabriel@gmail.com
+2,Jayden,21,Chemistry,011,jayden@gmail.com
+3,Michael,23,Physics,013,michael@gmail.com

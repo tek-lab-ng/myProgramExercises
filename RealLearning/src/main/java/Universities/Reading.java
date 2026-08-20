@@ -1,12 +1,11 @@
 package Universities;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Reading {
     public static void main(String[] args) throws IOException
@@ -50,5 +49,23 @@ public class Reading {
            throw new RuntimeException(e);
        }
 
+    }
+    public static List<String> readFile(Path file){
+        List<String> outcome = new ArrayList<>();
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file.toFile()));
+
+            int temp;
+            while ((temp = bufferedReader.read() )!= -1){
+                String value = String.valueOf((char)temp);
+                outcome.add(value);
+            }
+
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e){
+            System.out.println("error reading from file");
+        }
+        return outcome;
     }
 }

@@ -96,8 +96,9 @@ public class MyApp {
             System.out.println("My Class: " + ClassName + "->" + " TotalValue  " + TotalValue);
         });
 
+        Path filepath = Paths.get("C:\\Users\\Gabriel.Osaji\\Documents\\Public Class A\\RealLearning\\src\\main\\java\\Universities");
         try{
-            Path filepath = Paths.get("C:\\Users\\Gabriel.Osaji\\Documents\\Public Class A\\RealLearning\\src\\main\\java\\Universities");
+
             System.out.println("  Challenge 1");
             //challenge 1
             Files.walk(filepath).forEach(System.out::println);
@@ -118,12 +119,46 @@ public class MyApp {
 
             //challenge 5 and 6
             List<String> filenames = Files.walk(filepath).filter(Files::isRegularFile).map(path -> path.getFileName().toString()).toList();
-//            System.out.println(filenames);
+           System.out.println(filenames);
 
         }catch (IOException e){
             throw new RuntimeException();
         }
 
+        System.out.println("The outcome of the university text files");
+        System.out.println(UniversityFileProcessor.findFiles(filepath, ".txt"));
+
+        System.out.println("The list outcome of reading from a single file");
+        Path filePath1 = Paths.get("C:\\Users\\Gabriel.Osaji\\Documents\\Public Class A\\RealLearning\\src\\main\\java\\Universities\\Archive\\oldStudent.txt");
+        System.out.println(UniversityFileProcessor.readFile(filePath1));
+
+//        System.out.println(UniversityFileProcessor.convertToStudent("1,Gabriel,25,Computer Science,010,gabriel@gmail.com").getEmail());
+
+
+       List<Student> result = new ArrayList<>(UniversityFileProcessor.convertStudents(UniversityFileProcessor.readFile(filePath1)));
+//        result.forEach(n->System.out.println(n.getName()));
+       UniversityFileProcessor.findStudentsByCourse(result,"Computer Science").forEach(n->System.out.println(n.getName()));
+
+       result.forEach(n-> Lecturer.assignGrade(n));
+       Predicate<Student> predicate1 = (Student s) -> Integer.parseInt(s.getGrade()) >= 50;
+       List<String> withGradeAbove = result.stream().filter(st-> predicate1.test(st)).map(st->st.getName()).toList();
+
+       System.out.println("The list of student with grade above 50 are: " + withGradeAbove );
+
+        result.sort((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade())));
+
+        System.out.println("The student with the highest grade would be: " + result.get(0).getName());
+
+        Optional<Student> highest = result.stream().max(Comparator.comparing((student -> Integer.parseInt(student.getGrade()))));
+        System.out.println("The student with the highest grade is: " + highest.get().getName());
+
+        List<String> outcome = result.stream().filter(predicate1).sorted((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade()))).map(Student::getName).toList();
+
+        System.out.println("The list of student from highest to lowest is: " + outcome);
+
+
+
 
     }
+
 }

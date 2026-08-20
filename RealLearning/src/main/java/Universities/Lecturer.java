@@ -32,9 +32,9 @@ public class Lecturer extends LibraryMember implements Payable{
         return calculatePay();
     }
 
-    public void assignGrade(Student s){
+    public static void assignGrade(Student s){
         Scanner in = new Scanner(System.in);
-        System.out.print("Kindly enter the grade for the student selected: ");
+        System.out.print("Kindly enter the grade for the student selected: " + s.getName() + "  ");
         s.setGrade(in.next());
         System.out.println("The name of student with grade:  " + s.getName() +"  " + s.getGrade());
     }

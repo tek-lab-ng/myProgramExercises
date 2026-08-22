@@ -132,33 +132,68 @@ public class MyApp {
         Path filePath1 = Paths.get("C:\\Users\\Gabriel.Osaji\\Documents\\Public Class A\\RealLearning\\src\\main\\java\\Universities\\Archive\\oldStudent.txt");
         System.out.println(UniversityFileProcessor.readFile(filePath1));
 
+//
 //        System.out.println(UniversityFileProcessor.convertToStudent("1,Gabriel,25,Computer Science,010,gabriel@gmail.com").getEmail());
+        List<Student> result;
+
+            //Passing all the list of students from the file
+            result = new ArrayList<>(UniversityFileProcessor.convertStudents(UniversityFileProcessor.readFile(filePath1)));
+
+            //List all eligible or valid student entry from the list
+            result.forEach(n->System.out.println("Valid Students: " + n.getName()));
+
+            //This to println the name of student currently studying computer science
+            String compStudent = UniversityFileProcessor.findStudentsByCourse(result, "Computer Science").stream().map(Person::getName).toString();
+//                    .forEach(n -> System.out.println(n.getName()));
 
 
-       List<Student> result = new ArrayList<>(UniversityFileProcessor.convertStudents(UniversityFileProcessor.readFile(filePath1)));
-//        result.forEach(n->System.out.println(n.getName()));
-       UniversityFileProcessor.findStudentsByCourse(result,"Computer Science").forEach(n->System.out.println(n.getName()));
+            //Assigning grade value to each of the student
+            result.forEach(n -> Lecturer.assignGrade(n));
+            Predicate<Student> predicate1 = (Student s) -> Integer.parseInt(s.getGrade()) >= 50;
 
-       result.forEach(n-> Lecturer.assignGrade(n));
-       Predicate<Student> predicate1 = (Student s) -> Integer.parseInt(s.getGrade()) >= 50;
-       List<String> withGradeAbove = result.stream().filter(st-> predicate1.test(st)).map(st->st.getName()).toList();
+            //Filter student with grades above 50
+            List<String> withGradeAbove = result.stream().filter(st -> predicate1.test(st)).map(st -> st.getName()).toList();
 
-       System.out.println("The list of student with grade above 50 are: " + withGradeAbove );
+            System.out.println("The list of student with grade above 50 are: " + withGradeAbove);
 
-        result.sort((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade())));
+            // Returning the higest score student from the list
+            result.sort((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade())));
 
-        System.out.println("The student with the highest grade would be: " + result.get(0).getName());
+            System.out.println("The student with the highest grade would be: " + result.get(0).getName());
 
-        Optional<Student> highest = result.stream().max(Comparator.comparing((student -> Integer.parseInt(student.getGrade()))));
-        System.out.println("The student with the highest grade is: " + highest.get().getName());
+            // Same highest score returning student
+            Optional<Student> highest = result.stream().max(Comparator.comparing(student -> Integer.parseInt(student.getGrade())));
+            System.out.println("The student with the highest grade is: " + highest.get().getName());
 
-        List<String> outcome = result.stream().filter(predicate1).sorted((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade()))).map(Student::getName).toList();
+            //Student with the lowest score
+            Optional<Student> lowest = result.stream().min(Comparator.comparing(student -> Integer.parseInt(student.getGrade())));
 
-        System.out.println("The list of student from highest to lowest is: " + outcome);
+            // Output of all student from highest to lowest
+            List<String> outcome = result.stream().filter(predicate1).sorted((S1, S2) -> Integer.compare(Integer.parseInt(S2.getGrade()), Integer.parseInt(S1.getGrade()))).map(Student::getName).toList();
 
+            System.out.println("The list of student from highest to lowest is: " + outcome);
+
+            System.out.println(
+                    "========== UNIVERSITY REPORT ========== \n" +
+                    "Total Students: " + result.size() + "    \n" +
+
+                    "Passed Students: " +  withGradeAbove.size() + " \n" +
+                    "Failed Students: " +  (result.size() - withGradeAbove.size()) + " \n" +
+
+                    "Highest Grade Student: "  + highest.get().getName() + "  \n" +
+                    "Highest Grade:  " + highest.get().getGrade() + "  \n" +
+
+                    "Lowest Grade Student: "  + lowest.get().getGrade() + " \n" +
+                    "Lowest Grade:  " + lowest.get().getGrade() + "  \n" +
+
+                    "Computer Science Students:  " + compStudent +  " \n" +
+
+                    "========================================"
+            );
 
 
 
     }
+
 
 }

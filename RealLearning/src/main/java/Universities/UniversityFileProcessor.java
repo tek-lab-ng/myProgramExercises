@@ -9,7 +9,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UniversityFileProcessor {
+public final class UniversityFileProcessor {
 
     public static List<String> findFiles(Path directory, String extension){
         try {
@@ -43,15 +43,42 @@ public class UniversityFileProcessor {
     //Student(int id, String name, int age, String course, String libraryCardNumber, String email)
     public static Student convertToStudent(String record){
        String[] inputParam = record.split(",");
-       Student st = new Student(Integer.parseInt(inputParam[0]), inputParam[1], Integer.parseInt(inputParam[2]), inputParam[3], inputParam[4], inputParam[5]  );
-       return st;
+
+        Student st = new Student(parseOrThrow(inputParam[0]),
+                inputParam[1], parseOrThrow(inputParam[2]),
+                inputParam[3], inputParam[4], inputParam[5]);
+
+        return st;
     }
 
     public static List<Student> convertStudents(List<String> records){
-        return records.stream().map(UniversityFileProcessor::convertToStudent).toList();
+//        return records.stream().map(UniversityFileProcessor::convertToStudent).toList();
+            List<Student> student = new ArrayList<>();
+            for(String each : records){
+
+                try{
+                    Student st = UniversityFileProcessor.convertToStudent(each);
+                    student.add(st);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+            return student;
     }
 
     public static List<Student> findStudentsByCourse(List<Student> students, String course){
        return students.stream().filter(n->n.getCourse().equals(course)).toList();
     }
+
+    public static int parseOrThrow(String input) {
+
+           if (input == null || !input.matches("-?\\d+")) {
+               throw new NumberFormatException("Invalid student record: " + input);
+           }
+           return Integer.parseInt(input);
+
+    }
+
 }
+
+
